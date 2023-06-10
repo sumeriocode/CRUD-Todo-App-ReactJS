@@ -1,8 +1,14 @@
 import TodoListItem from "./TodoListItem";
+import TodoListPagination from "./TodoListPagination";
 
-function TodoList({ todos }: {
-    todos: Array<Todo>
-}) {
+type TodoListProps = {
+    todos: Todo[];
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+};
+
+function TodoList({ todos, totalPages, currentPage, onPageChange }: TodoListProps) {
     return (<>
         <table className="min-w-full bg-white border border-gray-300">
             <thead>
@@ -15,6 +21,12 @@ function TodoList({ todos }: {
                 todos.map((item) => (<TodoListItem item={item} />))
             } </tbody>
         </table>
+
+        <TodoListPagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+        />
     </>);
 }
 export default TodoList;

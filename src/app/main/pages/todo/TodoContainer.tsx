@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import TodoList from "./TodoList";
 import useFetchTodos from "../../../hooks/useTodoApi";
 import TodoForm from "./TodoForm";
@@ -31,6 +31,13 @@ function TodoContainer() {
         setShowModal(false);
     };
 
+    const handlePageChange = (page: any) => {
+        console.log(page);
+
+        // Otras lógicas para cargar los datos de la página seleccionada
+    };
+
+
 
 
     return (<>
@@ -40,20 +47,18 @@ function TodoContainer() {
                 <input type="text" placeholder="Search" className="border border-gray-300 rounded-md py-2 px-4 w-full" onChange={handleSearchChange} />
                 <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 ml-2 rounded-md" onClick={handleOpenModal}  >+</button>
             </div>
-            <TodoList todos={todos} />
-            <div className="flex justify-center mt-4">
-                <ul className="flex space-x-2">
-                    <li>
-                        <a href="#" className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">1</a>
-                    </li>
-                    <li>
-                        <a href="#" className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md">2</a>
-                    </li>
-                    <li>
-                        <a href="#" className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md">3</a>
-                    </li>
-                </ul>
-            </div>
+
+            <Suspense fallback={<div>Loading...</div>}>
+                {loading ? <div>Loading...</div> : <TodoList
+                    todos={todos}
+                    totalPages={10}
+                    currentPage={1}
+                    onPageChange={handlePageChange}
+                />}
+            </Suspense>
+
+
+
         </main>
         {showModal && (
             <TodoForm onAddTodo={handleAddTask} onCloseModal={handleCloseModal} />

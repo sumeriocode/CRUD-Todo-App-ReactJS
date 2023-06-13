@@ -37,29 +37,35 @@ function TodoContainer() {
         // Otras lógicas para cargar los datos de la página seleccionada
     };
 
-
-
-
     return (<>
 
-        <main className="container mx-auto px-4 py-8">
-            <div className="mb-4 flex items-center">
-                <input type="text" placeholder="Search" className="border border-gray-300 rounded-md py-2 px-4 w-full" onChange={handleSearchChange} />
-                <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 ml-2 rounded-md" onClick={handleOpenModal}  >+</button>
+        <header className="bg-white shadow">
+            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900">Todo</h1>
             </div>
+        </header>
 
-            <Suspense fallback={<div>Loading...</div>}>
-                {loading ? <div>Loading...</div> : <TodoList
-                    todos={todos}
-                    totalPages={10}
-                    currentPage={1}
-                    onPageChange={handlePageChange}
-                />}
-            </Suspense>
+        <main>
+            <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
 
 
+                <div className="mb-4 flex items-center">
+                    <input type="text" placeholder="Search" className="border border-gray-300 rounded-md py-2 px-4 w-full" onChange={handleSearchChange} />
+                    <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 ml-2 rounded-md" onClick={handleOpenModal}  >+</button>
+                </div>
 
+                <Suspense fallback={<div>Loading...</div>}>
+                    {loading ? <div>Loading...</div> : <TodoList
+                        todos={todos}
+                        totalPages={10}
+                        currentPage={1}
+                        onPageChange={handlePageChange}
+                    />}
+                </Suspense>
+
+            </div>
         </main>
+
         {showModal && (
             <TodoForm onAddTodo={handleAddTask} onCloseModal={handleCloseModal} />
         )}

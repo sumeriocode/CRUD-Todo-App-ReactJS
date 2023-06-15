@@ -7,22 +7,25 @@ import useDeleteTodo from "../../../hooks/useDeleteTodo";
 
 function TodoContainer() {
     const [searchTerm, setSearchTerm] = useState("");
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
     const options = useMemo(() => {
-        return { search: searchTerm };
-    }, [searchTerm]);
+        return { limit: limit, page: page ,search: searchTerm };
+    }, [searchTerm,page, limit]);
 
 
     const navigation  =  useNavigate();
-    const { todos, loading, refreshTodos } = useFetchTodos(options);
+    const { todos,pagination, loading, refreshTodos } = useFetchTodos(options);
     const { deleteTodo } = useDeleteTodo();
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
-    const handlePageChange = (page: unknown) => {
+    const handlePageChange = (page: number) => {
+        setPage(page);
         console.log(page);
-
+        
     };
 
     const handleDeleteTodo = async (id: number) => {
@@ -49,8 +52,8 @@ function TodoContainer() {
                 <Suspense fallback={<div>Loading...</div>}>
                     {loading ? <div>Loading...</div> : <TodoList
                         todos={todos}
-                        totalPages={10}
-                        currentPage={1}
+                        totalPages={pagination.totalPages}
+                        currentPage={pagination.currentPage}
                         onPageChange={handlePageChange}
                         onDelete={(id)=>handleDeleteTodo(id)}
                     />}

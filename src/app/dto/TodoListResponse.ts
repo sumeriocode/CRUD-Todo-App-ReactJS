@@ -2,13 +2,7 @@
 
 type FetchTodosResponse = {
     items: Todo[];
-    meta: {
-        totalItems: number;
-        itemCount: number;
-        itemsPerPage: number;
-        totalPages: number;
-        currentPage: number;
-    };
+    meta: Pagination;
     links: {
         first: string;
         previous: string;

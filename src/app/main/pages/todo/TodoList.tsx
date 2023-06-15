@@ -3,7 +3,7 @@ import TodoListPagination from "./TodoListPagination";
 
 type TodoListProps = {
     todos: Todo[];
-    currentPage: number;
+    currentPage: number ;
     totalPages: number;
     onPageChange: (page: number) => void;
     onDelete: (todoId: number) => void;

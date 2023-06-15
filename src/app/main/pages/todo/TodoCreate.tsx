@@ -1,28 +1,34 @@
 import { useState } from 'react';
 
 import Header from "../../../components/header/Header";
+import useCreateTodo from '../../../hooks/useCreateTodo';
+import { useNavigate } from 'react-router-dom';
 
 
-interface TodoFormProps {
-    onAddTodo: (Todo: TodoRequest) => void;
-    onCloseModal: () => void;
+interface TodoCreateFormProps {
+   id: string
 }
 
-const TodocreateOrUpdate = () => {
+const TodocreateOrUpdate = ({ id }: TodoCreateFormProps) => {
 
     const [name, setName] = useState('');
+    const { loading, error, successMessage, createTodo } = useCreateTodo();
+    const navigation = useNavigate();
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Aquí puedes guardar el todo con el nombre en tu lógica de negocio
-        console.log('Todo nombre:', name);
-        setName(''); // Limpiamos el campo de nombre después de guardar el todo
+        const todo: TodoRequest = { name };
+        createTodo(todo).then((result) => {
+            if (result.success) {
+                setName('');
+                navigation('/')
+            }
+        });
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
-    };
-
+      };
 
     return (
         <>
@@ -37,10 +43,10 @@ const TodocreateOrUpdate = () => {
                             <div className="border-b border-gray-900/10 pb-12">
                                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     <div className="col-span-full">
-                                        <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">Street address</label>
+                                        <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">Name</label>
                                         <div className="mt-2">
-                                            <input type="text" value={name}
-                                                onChange={handleChange} name="name" id="name" autoComplete="name" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <input type="text" value={name}  onChange={handleChange}
+                                                name="name" id="name" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                         </div>
                                     </div>
                                 </div>

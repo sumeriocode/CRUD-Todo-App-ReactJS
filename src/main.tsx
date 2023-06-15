@@ -18,6 +18,11 @@ const router = createBrowserRouter([
     element: <TodocreateOrUpdate />,
     errorElement: <ErrorPage />,
   },
+  {
+    path: "/create/:todoId",
+    element: <TodocreateOrUpdate />,
+    errorElement: <ErrorPage />,
+  },
 ]);
 
 

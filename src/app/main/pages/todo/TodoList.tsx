@@ -1,15 +1,26 @@
+import { Box, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import TodoListItem from "./TodoListItem";
 import TodoListPagination from "./TodoListPagination";
+import { useState } from "react";
 
 type TodoListProps = {
-    todos: Todo[];
-    currentPage: number ;
+    todos: Todo[] ;
+    currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
     onDelete: (todoId: number) => void;
 };
 
+
 function TodoList({ todos, totalPages, currentPage, onPageChange, onDelete }: TodoListProps) {
+    const [todo, setTodo] = useState<TodoRequest>({ name: '' });
+    const [open, setOpen] = useState(false);
+    const handleOpen = (data: Todo) => {
+        setTodo(data)
+        setOpen(true);
+    }
+    const handleClose = () => setOpen(false);
+
     return (<>
         {
 
@@ -23,7 +34,7 @@ function TodoList({ todos, totalPages, currentPage, onPageChange, onDelete }: To
                             </tr>
                         </thead>
                         <tbody> {
-                            todos.map((item) => (<TodoListItem item={item} onDelete={onDelete} />))
+                            todos.map((item) => (<TodoListItem item={item} onDelete={onDelete} onView={(data) => handleOpen(data)} />))
                         } </tbody>
                     </table>
                     <TodoListPagination
@@ -43,6 +54,26 @@ function TodoList({ todos, totalPages, currentPage, onPageChange, onDelete }: To
                 </div>)
         }
 
+        <Dialog onClose={handleClose} open={open}>
+            <DialogTitle>Todo Item # {todo.id}</DialogTitle>
+            <DialogContent>
+                <form className="rounded-md">
+                    <div className=" border-gray-900/10 ">
+                        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            <div className="col-span-full">
+                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                                <div className="mt-2">
+                                    <input type="text" value={todo.name}
+                                        name="name" readOnly disabled id="name" className={`block w-full rounded-md  py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6
+                                                `} />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
     </>);
 }
 export default TodoList;

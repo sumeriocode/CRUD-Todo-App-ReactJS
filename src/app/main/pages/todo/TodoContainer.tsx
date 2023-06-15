@@ -3,17 +3,18 @@ import TodoList from "./TodoList";
 import useFetchTodos from "../../../hooks/useTodoApi";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../components/header/Header";
+import useDeleteTodo from "../../../hooks/useDeleteTodo";
 
 function TodoContainer() {
-
     const [searchTerm, setSearchTerm] = useState("");
-    const navigation  =  useNavigate();
-
     const options = useMemo(() => {
         return { search: searchTerm };
     }, [searchTerm]);
 
-    const { todos, loading } = useFetchTodos(options);
+
+    const navigation  =  useNavigate();
+    const { todos, loading, refreshTodos } = useFetchTodos(options);
+    const { deleteTodo } = useDeleteTodo();
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -22,8 +23,15 @@ function TodoContainer() {
     const handlePageChange = (page: unknown) => {
         console.log(page);
 
-        // Otras lógicas para cargar los datos de la página seleccionada
     };
+
+    const handleDeleteTodo = async (id: number) => {
+        const response = await deleteTodo(String(id));
+    
+        if (response.success) {
+            refreshTodos();
+        }
+      };
 
     return (<>
         <Header title="Todo List"/>
@@ -44,6 +52,7 @@ function TodoContainer() {
                         totalPages={10}
                         currentPage={1}
                         onPageChange={handlePageChange}
+                        onDelete={(id)=>handleDeleteTodo(id)}
                     />}
                 </Suspense>
 
